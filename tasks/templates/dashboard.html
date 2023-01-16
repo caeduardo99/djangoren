@@ -1,0 +1,377 @@
+{% extends "base.html" %}{% block content %}
+​
+<script>
+  jQuery(function ($) {
+    $(document).ajaxSend(function () {
+      $("#bg-spinner").fadeIn(500);
+    });
+    $("#button-addon1").click(function () {
+      $.ajax({
+        type: 'GET',
+        success: function (data) {
+          console.log("se carga")
+        }
+      }).done(function () {
+        setTimeout(function () {
+          $("#bg-spinner");
+        });
+      });
+    });
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    $("#search").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#ven div").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#searchPro").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#pro div").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#searchLine").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#line div").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
+<script type="text/javascript">
+  $(function () {
+    $('#datepicker').datepicker();
+  });
+</script>
+<script type="text/javascript">
+  $(function () {
+    $('#datepicker1').datepicker();
+  });
+</script>
+​<style>
+  .ocultar_vendedor {
+    display: none;
+  }
+
+  .mostrar_vendedor {
+    display: block;
+  }
+
+  .ocultar_prov {
+    display: none;
+  }
+  .mostrar_prov{
+    display: block;
+  }
+
+  .ocultar_line{
+    display: none;
+  }
+  .mostrar_line{
+    display: block;
+  }
+
+  #contenido{
+    padding: 10px;
+  }
+</style>
+​
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="position-sticky pt-3 sidebar-sticky">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">
+              <span data-feather="home" class="align-text-bottom"></span>
+              Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file" class="align-text-bottom"></span>
+              Orders
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="shopping-cart" class="align-text-bottom"></span>
+              Products
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="users" class="align-text-bottom"></span>
+              Customers
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="bar-chart-2" class="align-text-bottom"></span>
+              Reports
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="layers" class="align-text-bottom"></span>
+              Integrations
+            </a>
+          </li>
+        </ul>
+        ​
+        <h6
+          class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+          <span>Saved reports</span>
+          <a class="link-secondary" href="#" aria-label="Add a new report">
+            <span data-feather="plus-circle" class="align-text-bottom"></span>
+          </a>
+        </h6>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file-text" class="align-text-bottom"></span>
+              Current month
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file-text" class="align-text-bottom"></span>
+              Last quarter
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file-text" class="align-text-bottom"></span>
+              Social engagement
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file-text" class="align-text-bottom"></span>
+              Year-end sale
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- Dashboad title -->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="flex-md-nowrap align-items-center pb-2 mb-5 border-bottom">
+        <br>
+        <h1 class="h2">REPORTES</h1>
+        <br>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Filtrar
+        </button>
+        <a class="btn btn-dark" href="/dashboard/">
+          Nuevo filtro
+        </a>
+        <br>
+        <br>
+        <h3>Utilidad, Precio y Costo Total</h3>
+        <hr>
+        {% autoescape off %}
+        {{ plot_div }}
+        {% endautoescape %}
+        ​
+        <h3>Cantidad</h3>
+        {% autoescape off %}
+        {{ donut }}
+        {% endautoescape %}
+        ​
+        <h3>Proveedor</h3>
+        {% autoescape off %}
+        {{ provee }}
+        {% endautoescape %}
+        ​
+        <h3>Linea de Tiempo</h3>
+        {% autoescape off %}
+        {{ time_line }}
+        {% endautoescape %}
+      </div>
+    </main>
+  </div>
+</div>
+​
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="exampleModalLabel" aria-hidden="true" style="padding: 10px;">
+  <div id="bg-spinner">
+    <div id="position-spinner">
+      <span id="spinner"></span>
+    </div>
+  </div>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Personalizar la busqueda</h1>
+      </div>
+      <div class="row" id="contenido">
+        <h5>Delimita la Fecha:</h5>
+      </div>
+      <div class="modal-body">
+        <form method="GET">
+          <div class="row">
+            <div class="col-5">
+              <label for="date" class="col col-form-label text-center">Desde:</label>
+              <div class="col-11 text-center">
+                <div class="input-group date" id="datepicker">
+                  <input type="text" class="form-control" name="since">
+                  <span class="input-group-append">
+                    <span class="input-group-text bg-white d-block">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <br>
+            </div>
+            <div class="col-6">
+              <label for="date" class="col col-form-label text-center">Hasta:</label>
+              <div class="col-11 text-center">
+                <div class="input-group date" id="datepicker1">
+                  <input type="text" class="form-control" name="to">
+                  <span class="input-group-append">
+                    <span class="input-group-text bg-white d-block">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-4">
+                <a class="btn btn-primary ven_btn" id="ven_btn" role="button">Filtro de Cliente</a>
+              </div>
+              <div class="col-4">
+                <a class="btn btn-primary prov_btn" id="prov_btn" role="button">Filtro de Proveedores</a>
+              </div>
+              <div class="col-4">
+                <a class="btn btn-primary line_btn" id="line_btn" role="button">Filtro de Lineas</a>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-11">
+                <div class="ocultar_vendedor" id="ocultar_vendedor">
+                  <div class="col-11">
+                    <h5>Lista de Vendedores</h5>
+                    <div class="input-group input-group-sm mb3 mt-a">
+                      <input type="text" class="form-control" id="search" placeholder="Buscar Filtro">
+                    </div>
+                    <br>
+                    <div class="checklist" id="ven">
+                      {% for vend in check_vendedor %}
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="vendedor" value="{{vend.nombrevend}}">
+                        <label class="form-check-label" for="flexCheckDefault">{{ vend.nombrevend }}</label>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-11">
+                <div class="ocultar_prov" id="ocultar_prov">
+                  <div class="col-11">
+                    <h5>Lista de Proveedores</h5>
+                    <div class="input-group input-group-sm mb3 mt-a ">
+                      <input type="text" class="form-control" id="searchPro" placeholder="Buscar Filtro">
+                    </div>
+                    <br>
+                    <div class="checklist" id="pro">
+                      {% for prov in check_prov %}
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="proveedor" value="{{prov.nombreprovcli}}">
+                        <label class="form-check-label" for="flexCheckDefault">{{ prov.nombreprovcli }}</label>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-11">
+                <div class="ocultar_line" id="ocultar_line">
+                  <div class="col-11">
+                    <h5>Lista de Lineas</h5>
+                    <div class="input-group input-group-sm mb3 mt-a ">
+                      <input type="text" class="form-control" id="searchLine" placeholder="Buscar Filtro">
+                    </div>
+                    <br>
+                    <div class="checklist" id="line">
+                      {% for line in check_linea %}
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="linea" value="{{line.desc_línea}}">
+                        <label class="form-check-label" for="flexCheckDefault">{{ line.desc_línea }}</label>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <button class="btn btn-primary text-center " type="submit" id="button-addon1">Buscar</button>
+          <button type="button" class="btn btn-secondary float-end" data-bs-dismiss="modal">Cerrar</button>
+        </form>
+      </div>
+      <div class="modal-footer" style="background-color: #847770;">
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  let readMore_btn = document.getElementById('ven_btn')
+  let hideText = document.getElementById('ocultar_vendedor')
+
+  let read_prov = document.getElementById('prov_btn')
+  let hide_text_prov = document.getElementById('ocultar_prov')
+
+  let read_line = document.getElementById('line_btn')
+  let hide_text_line = document.getElementById('ocultar_line')
+
+  function toggleText() {
+    hideText.classList.toggle('mostrar_vendedor')
+    if (hideText.classList.contains('mostrar_vendedor')) {
+      ven_btn.innerHTML = 'Ocultar clientes'
+    } else {
+      ven_btn.innerHTML = 'Mostrar clientes'
+    }
+  }
+
+  function hide_prov_list() {
+    hide_text_prov.classList.toggle('mostrar_prov')
+    if (hide_text_prov.classList.contains('mostrar_prov')) {
+      prov_btn.innerHTML = 'Ocultar proveedores'
+    } else {
+      prov_btn.innerHTML = 'Mostrar proveedores'
+    }
+  }
+
+  function hide_line_list(){
+    hide_text_line.classList.toggle('mostrar_line')
+    if(hide_text_line.classList.contains('mostrar_line')){
+      line_btn.innerHTML = 'Ocultar Lineas'
+    }else{
+      line_btn.innerHTML = 'Mostrar Lineas'
+    }
+  }
+
+  readMore_btn.addEventListener('click', toggleText)
+  read_prov.addEventListener('click', hide_prov_list)
+  read_line.addEventListener('click', hide_line_list)
+</script>​
+
+{% endblock %}
